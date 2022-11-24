@@ -1,5 +1,7 @@
 def add_county(data):
     
+    import pandas as pd
+    
     counties = pd.read_csv("./ZIP-COUNTY-FIPS_2017-06.csv", dtype='object')
     
     data['BorrowerZip'] = data['BorrowerZip'].str[:5]
@@ -15,6 +17,8 @@ def add_county(data):
     return data
 
 def add_coords(data):
+    
+    import pandas as pd
 
     coords = pd.read_csv('./county_to_coords.csv',dtype='object')
     
@@ -22,18 +26,15 @@ def add_coords(data):
     
     data.drop('FIPS',axis=1,inplace=True)
     
-    data['Latitude'] = (data['Latitude'].
-                        str.replace("\u2014", '-')[:-1])
-    
-    data['Longitude'] = (data['Longitude'].
-                         str.replace("\u2014", '-')[:-1])
-    
     return data
 
 
 def load_PPP(file_path):
+
+    import pandas as pd
+    import numpy as np
         
-    data = pd.read_csv(file_path, nrows=100)
+    data = pd.read_csv(file_path)
     
     data = data.loc[~(data['BorrowerCity'].isin(['','N/A',np.nan])) & ~(data['BorrowerState'].isin(['','N/A',np.nan])),]
     
