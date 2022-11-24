@@ -8,23 +8,23 @@ def add_county(data):
     
     data = data.merge(counties, left_on = ['BorrowerState','BorrowerZip'], right_on = ['STATE','ZIP'])
     
-    data.drop(['ZIP','COUNTYNAME','STATE',
+    data.drop(['ZIP','STATE', 'COUNTYNAME',
                'CLASSFP','Gender','Veteran',
                'NonProfit','Race','Ethnicity'],axis=1,inplace=True)
     
     data.rename(columns={'STCOUNTYFP': 'BorrowerFIPS'},inplace=True)
     
+    data['full_address'] = data['BorrowerAddress'] + ',' + data['BorrowerCity'] + ',' + data['BorrowerState']
+    
     return data
 
 def add_coords(data):
     
-    import pandas as pd
-
-    coords = pd.read_csv('./county_to_coords.csv',dtype='object')
+    import geopy as gpy
     
-    data = data.merge(coords,left_on=['BorrowerFIPS'], right_on=['FIPS'])
+    geolocator = gpy.geocoders.Nominatim(timeout = 10, user_agent = 'myGeolocator')
     
-    data.drop('FIPS',axis=1,inplace=True)
+    data['lat_long'] = data.full_address.apply(geolocator.geocode)
     
     return data
 
@@ -36,7 +36,7 @@ def load_PPP(file_path):
         
     data = pd.read_csv(file_path)
     
-    data = data.loc[~(data['BorrowerCity'].isin(['','N/A',np.nan])) & ~(data['BorrowerState'].isin(['','N/A',np.nan])),]
+    data = data.loc[~(data['BorrowerCity'].isin(['','N/A',np.nan])) & ~(data['BorrowerState'].isin(['','N/A',np.nan,'AK','HI'])),]
     
     data = add_county(data)
     
