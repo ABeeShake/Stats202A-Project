@@ -8,14 +8,10 @@ def add_county(data):
     
     data = data.merge(counties, left_on = ['BorrowerState','BorrowerZip'], right_on = ['STATE','ZIP'])
     
-    drop_cols = ['ZIP','STATE', 'COUNTYNAME',
-               'CLASSFP','Gender','Veteran',
-               'NonProfit','Race','Ethnicity',
-               'UTILITIES_PROCEED','RENT_PROCEED',
-               'PAYROLL_PROCEED','REFINANCE_EIDL_PROCEED',
-               'HEALTH_CARE_PROCEED','DEBT_INTEREST_PROCEED',
-               'MORTGAGE_INTEREST_PROCEED',
-               'FranchiseName','ProcessingMethod']
+    drop_cols = ['ZIP','STATE', 'COUNTYNAME','CLASSFP','Gender','Veteran',
+               'NonProfit','Race','Ethnicity','UTILITIES_PROCEED','RENT_PROCEED',
+               'PAYROLL_PROCEED','REFINANCE_EIDL_PROCEED','HEALTH_CARE_PROCEED','DEBT_INTEREST_PROCEED',
+               'MORTGAGE_INTEREST_PROCEED','FranchiseName','ProcessingMethod']
     
     data.drop(drop_cols,axis=1,inplace=True)
     
